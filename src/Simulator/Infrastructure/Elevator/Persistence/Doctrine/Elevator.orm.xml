@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Simulator\Domain\Elevator\Model\Elevator" table="elevator" repository-class="App\Simulator\Domain\Elevator\Repository\ElevatorRepositoryInterface">
+        <id name="id" type="string" column="id" />
+        <field name="name" column="name" type="string" nullable="true" />
+        <field name="currentFloor" column="current_floor" type="integer" />
+        <field name="creationDate" column="creation_date" type="datetime" />
+        <field name="busy" column="busy" type="boolean" />
+
+        <many-to-one field="building" target-entity="App\Simulator\Domain\Building\Model\Building" />
+        <one-to-many field="sequences" target-entity="App\Simulator\Domain\Sequence\Model\Sequence" mapped-by="elevator">
+            <cascade>
+                <cascade-persist/>
+            </cascade>
+        </one-to-many>
+    </entity>
+
+</doctrine-mapping>

@@ -1,0 +1,11 @@
+{% if error is defined %}
+    <h1>{{ error }}</h1>
+{% else %}
+    {% if reports is empty %}
+        <h1>No data</h1>
+    {% else %}
+        {% for report in reports %}
+            <div> Elevator {{ report.getElevatorName() }} ({{ report.getCreatedAt() |date("Y-m-d H:i") }}) => Current Floor: {{ report.getCurrentFloor() }} / Number partial of travels: {{ report.getNumTraveledFloors() }} / Number total of travels: {{ report.getNumTotalTraveledFloors() }}</div>
+        {% endfor %}
+    {% endif %}
+{% endif %}

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                          https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Simulator\Domain\Sequence\Model\Sequence" table="sequence" repository-class="App\Simulator\Domain\Sequence\Repository\SequenceRepositoryInterface">
+        <id name="id" type="string" column="id" />
+        <field name="fromFloor" column="from_floor" type="integer" />
+        <field name="fromRequest" column="from_request" type="integer" />
+        <field name="toFloor" column="to_floor" type="integer" />
+        <field name="creationDate" column="creation_date" type="datetime" />
+
+        <many-to-one field="elevator" target-entity="App\Simulator\Domain\Elevator\Model\Elevator" />
+    </entity>
+
+</doctrine-mapping>

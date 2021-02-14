@@ -50,12 +50,9 @@ final class SimulatorCommandHandler
             }
 
             if (empty($elevatorsAvailable)) {
-                // Este caso no se puede dar ya que la implementacion con Workers solo cogeria un nuevo Request
-                // cuando este disponible (cuando haya terminado el proceso)
                 continue;
             }
 
-            // Cogemos uno random de los disponibles (con la cola de prioridad sería siguiendo la politica correspondiente)
             $elevator = $elevatorsAvailable[array_rand($elevatorsAvailable, 1)];
 
             Assertion::keyExists($request, 'from');
@@ -65,14 +62,11 @@ final class SimulatorCommandHandler
             Assertion::between($request['from'], 0, $building->getNumFloors() - 1);
             Assertion::between($request['to'], 0, $building->getNumFloors() - 1);
 
-            // Durante este proceso el ascensor estaría moviendose y ocupado y lo interpreto con esta variable.
             $elevator->setBusy(true);
 
             $now = new \DateTime();
             $now->setTime($request['hour'], $request['minutes']);
 
-            // Aquí soy consciente que hay un N+1, no lo he mejorado ya que en un sistema real con colas
-            // solo se ejecutaría una request a la vez y no existiría el foreach
             $sequence = Sequence::create($now, $elevator->getCurrentFloor(), $request['from'], $request['to'], $elevator);
             $this->sequenceRepository->save($sequence);
 
@@ -80,10 +74,6 @@ final class SimulatorCommandHandler
             $this->elevatorRepository->save($elevator);
         }
 
-        // Llegado a este punto asumimos que vuelven a estar disponibles.
-        // Dado que deberian ser Workers esta es la manera de decir que ha terminado el proceso y
-        // esta disponible para un nuevo Request.
-        // Asumimos que para este ejemplo no llegaran mas de 3 requests a la vez.
         foreach ($building->getElevators() as $elevator) {
             if ($elevator->isBusy()) {
                 $elevator->setBusy(false);

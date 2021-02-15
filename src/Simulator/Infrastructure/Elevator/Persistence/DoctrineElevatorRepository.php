@@ -34,4 +34,13 @@ class DoctrineElevatorRepository implements ElevatorRepositoryInterface
             ->setParameters(['name' => $name])
             ->getQuery()->getResult();
     }
+
+    public function saveCollection(array $elevators): void
+    {
+        foreach ($elevators as $elevator) {
+            $this->em->persist($elevator);
+        }
+
+        $this->em->flush();
+    }
 }

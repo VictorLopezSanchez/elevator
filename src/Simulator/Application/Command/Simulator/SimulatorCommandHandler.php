@@ -40,7 +40,9 @@ final class SimulatorCommandHandler
             return;
         }
 
+        $sequences = $elevators = [];
         foreach ($requests as $request) {
+
             $elevatorsAvailable = [];
             /** @var Elevator $elevator */
             foreach ($building->getElevators() as $elevator) {
@@ -62,22 +64,21 @@ final class SimulatorCommandHandler
             Assertion::between($request['from'], 0, $building->getNumFloors() - 1);
             Assertion::between($request['to'], 0, $building->getNumFloors() - 1);
 
+            // Fake busy elevator
             $elevator->setBusy(true);
 
             $now = new \DateTime();
             $now->setTime($request['hour'], $request['minutes']);
 
-            $sequence = Sequence::create($now, $elevator->getCurrentFloor(), $request['from'], $request['to'], $elevator);
-            $this->sequenceRepository->save($sequence);
-
+            $sequences[] = Sequence::create($now, $elevator->getCurrentFloor(), $request['from'], $request['to'], $elevator);
+            
+            // Fake available elevator again
+            $elevator->setBusy(false);
             $elevator->setCurrentFloor($request['to']);
-            $this->elevatorRepository->save($elevator);
+            $elevators[] = $elevator;
         }
 
-        foreach ($building->getElevators() as $elevator) {
-            if ($elevator->isBusy()) {
-                $elevator->setBusy(false);
-            }
-        }
+        $this->sequenceRepository->saveCollection($sequences);
+        $this->elevatorRepository->saveCollection($elevators);
     }
 }

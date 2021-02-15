@@ -25,6 +25,15 @@ class DoctrineSequenceRepository implements SequenceRepositoryInterface
         $this->em->flush();
     }
 
+    public function saveCollection(array $sequences): void
+    {
+        foreach ($sequences as $sequence) {
+            $this->em->persist($sequence);
+        }
+
+        $this->em->flush();
+    }
+
     public function findByBuildingNameAndDay(string $name, string $date): ?array
     {
         return $this->em->createQueryBuilder()

@@ -9,4 +9,6 @@ interface SequenceRepositoryInterface
     public function findByBuildingNameAndDay(string $name, string $date): ?array;
 
     public function save(Sequence $sequence): void;
+
+    public function saveCollection(array $sequences): void;
 }

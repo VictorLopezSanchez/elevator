@@ -9,4 +9,6 @@ interface ElevatorRepositoryInterface
     public function findByBuildingName(string $name): ?array;
 
     public function save(Elevator $elevator): void;
+
+    public function saveCollection(array $elevators): void;
 }
